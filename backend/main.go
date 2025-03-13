@@ -41,5 +41,5 @@ func main() {
 	})
 
 	// Start server on port 3001
-	log.Fatal(app.Listen(":3001"))
+	log.Fatal(app.Listen(":8504"))
 }
