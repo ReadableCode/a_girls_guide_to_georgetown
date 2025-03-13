@@ -15,3 +15,9 @@ go run main.go
 docker build -t a-girls-guide-to-georgetown .
 docker run -it -p 3001:3001 a-girls-guide-to-georgetown
 ```
+
+## DIagnosing inside the container
+
+```bash
+docker run --rm -it a-girls-guide-to-georgetown sh
+```
