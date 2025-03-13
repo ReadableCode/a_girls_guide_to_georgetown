@@ -16,10 +16,18 @@ WORKDIR /app
 # Copy the built Go server from the previous stage
 COPY --from=build /app/backend/server /app/backend/server
 
-# Copy the frontend separately
-COPY frontend/ frontend/
+# Ensure the volume directories exist
+RUN mkdir -p /app/logs
+RUN mkdir -p /app/frontend
 
+# Declare volumes for frontend and logs
+VOLUME ["/app/frontend", "/app/logs"]
+
+# Set the working directory to the backend
 WORKDIR /app/backend
 
+# Expose the port the server listens on
 EXPOSE 8504
+
+# Run the server
 CMD ["./server"]
