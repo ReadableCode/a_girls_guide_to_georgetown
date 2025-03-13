@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -49,18 +50,23 @@ func main() {
 	app.Static("/static", "../frontend/static")
 	app.Static("/css", "../frontend/css")
 
-	// Serve HTML pages
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendFile("../frontend/templates/index.html")
-	})
-	app.Get("/about", func(c *fiber.Ctx) error {
-		return c.SendFile("../frontend/templates/about.html")
-	})
-	app.Get("/projects", func(c *fiber.Ctx) error {
-		return c.SendFile("../frontend/templates/projects.html")
-	})
-	app.Get("/contact", func(c *fiber.Ctx) error {
-		return c.SendFile("../frontend/templates/contact.html")
+	// Dynamically serve all HTML pages in the templates folder
+	templatesDir := "../frontend/templates"
+	filepath.WalkDir(templatesDir, func(path string, d os.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if !d.IsDir() && filepath.Ext(path) == ".html" {
+			// Generate a route based on the file name (e.g., "about.html" -> "/about")
+			route := "/" + filepath.Base(path[:len(path)-len(filepath.Ext(path))])
+			if route == "/index" {
+				route = "/" // Set index.html to be served at the root
+			}
+			app.Get(route, func(c *fiber.Ctx) error {
+				return c.SendFile(path)
+			})
+		}
+		return nil
 	})
 
 	log.Fatal(app.Listen(":8504"))

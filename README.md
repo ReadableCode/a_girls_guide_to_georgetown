@@ -1,10 +1,17 @@
 # a_girls_guide_to_georgetown
 
+## Initializing the Project
+
+```bash
+cd backend
+go mod init portfolio
+go mod tidy
+```
+
 ## Hosting Locally
 
 ```bash
 cd backend
-go mod init portfolio  # if not already initialized
 go mod tidy
 go run main.go
 ```
