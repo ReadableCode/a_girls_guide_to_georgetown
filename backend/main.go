@@ -11,20 +11,15 @@ import (
 func main() {
 	app := fiber.New()
 
-	// Debugging: Print if files exist
-	templates := []string{
-		"../frontend/templates/index.html",
-		"../frontend/templates/about.html",
-		"../frontend/templates/projects.html",
-		"../frontend/templates/contact.html",
-	}
+	// Define the frontend path
+	frontendPath := "../frontend/templates/"
 
-	for _, path := range templates {
-		if _, err := os.Stat(path); os.IsNotExist(err) {
-			log.Fatalf("ERROR: File %s does not exist", path)
-		} else {
-			fmt.Println("File exists:", path)
-		}
+	// Debugging: Check if index.html exists
+	indexPath := frontendPath + "index.html"
+	if _, err := os.Stat(indexPath); os.IsNotExist(err) {
+		log.Fatalf("ERROR: File %s does not exist", indexPath)
+	} else {
+		fmt.Println("File exists:", indexPath)
 	}
 
 	// Serve static files

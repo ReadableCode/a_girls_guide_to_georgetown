@@ -4,7 +4,7 @@
 
 ```bash
 cd backend
-go mod init portfolio
+go mod init portfolio  # if not already initialized
 go mod tidy
 go run main.go
 ```
@@ -13,7 +13,7 @@ go run main.go
 
 ```bash
 docker build -t a-girls-guide-to-georgetown .
-docker run -it -p 3001:3001 a-girls-guide-to-georgetown
+docker run -it -p 3001:3001 -v "$PWD/frontend:/app/frontend" a-girls-guide-to-georgetown
 ```
 
 ## DIagnosing inside the container
