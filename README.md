@@ -16,8 +16,15 @@ docker build -t a-girls-guide-to-georgetown .
 docker run -it -p 3001:3001 -v "$PWD/frontend:/app/frontend" a-girls-guide-to-georgetown
 ```
 
-## DIagnosing inside the container
+## Diagnosing inside the container
 
 ```bash
 docker run --rm -it a-girls-guide-to-georgetown sh
+```
+
+## Bashing into the running container
+
+```bash
+sudo docker exec -it a-girls-guide-to-georgetown sh
+
 ```
