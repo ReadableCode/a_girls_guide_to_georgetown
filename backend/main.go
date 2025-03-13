@@ -27,7 +27,7 @@ func main() {
 	defer file.Close()
 	log.SetOutput(file) // Redirect all logs to this file
 
-	fmt.Println("📝 Log file: ", logFile)
+	fmt.Println("Log file: ", logFile)
 
 	// Enable Fiber's logging middleware (logs to the file)
 	app.Use(logger.New(logger.Config{
