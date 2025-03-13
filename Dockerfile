@@ -21,5 +21,5 @@ COPY frontend/ frontend/
 
 WORKDIR /app/backend
 
-EXPOSE 3001
+EXPOSE 8504
 CMD ["./server"]
