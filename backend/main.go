@@ -5,69 +5,83 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 )
 
+var templatesDir = "../frontend/templates"
+var articlesDir = "../frontend/templates/articles"
+
+type Article struct {
+	Title string `json:"title"`
+	Link  string `json:"link"`
+}
+
 func main() {
 	app := fiber.New()
 
-	// Ensure the log directory exists
-	logDir := "../logs"
-	logFile := logDir + "/access.log"
-	if _, err := os.Stat(logDir); os.IsNotExist(err) {
-		os.MkdirAll(logDir, 0755)
-	}
-
-	// Open log file
-	file, err := os.OpenFile(logFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		log.Fatalf("Failed to open log file: %v", err)
-	}
-	defer file.Close()
-	log.SetOutput(file) // Redirect all logs to this file
-
-	fmt.Println("Log file: ", logFile)
-
-	// Enable Fiber's logging middleware (logs to the file)
-	app.Use(logger.New(logger.Config{
-		Output: file,
-	}))
-
-	// Log each request manually
-	app.Use(func(c *fiber.Ctx) error {
-		clientIP := c.IP()
-		userAgent := c.Get("User-Agent")
-		method := c.Method()
-		path := c.Path()
-
-		log.Printf("🔹 [%s] %s - %s | %s", method, path, clientIP, userAgent)
-		return c.Next()
-	})
+	// Enable logging
+	app.Use(logger.New())
 
 	// Serve static files
 	app.Static("/static", "../frontend/static")
 	app.Static("/css", "../frontend/css")
 
-	// Dynamically serve all HTML pages in the templates folder
-	templatesDir := "../frontend/templates"
-	filepath.WalkDir(templatesDir, func(path string, d os.DirEntry, err error) error {
+	// API endpoint to list all articles dynamically
+	app.Get("/api/articles", func(c *fiber.Ctx) error {
+		articles := []Article{}
+
+		// Scan the articles directory for .html files
+		if err := filepath.WalkDir(articlesDir, func(path string, d os.DirEntry, err error) error {
+			if err != nil {
+				return err
+			}
+			if !d.IsDir() && filepath.Ext(path) == ".html" {
+				filename := filepath.Base(path)
+				title := strings.TrimSuffix(filename, ".html")
+				title = strings.ReplaceAll(title, "-", " ") // Format title nicely
+
+				articles = append(articles, Article{
+					Title: strings.Title(title), // Capitalize first letters
+					Link:  "/articles/" + strings.TrimSuffix(filename, ".html"),
+				})
+			}
+			return nil
+		}); err != nil {
+			return err
+		}
+
+		return c.JSON(articles) // Return the list of articles as JSON
+	})
+
+	// Serve all pages in templates/ and templates/articles/
+	if err := filepath.WalkDir(templatesDir, func(path string, d os.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
 		if !d.IsDir() && filepath.Ext(path) == ".html" {
-			// Generate a route based on the file name (e.g., "about.html" -> "/about")
-			route := "/" + filepath.Base(path[:len(path)-len(filepath.Ext(path))])
+			// Generate the correct route based on the relative path
+			relPath, _ := filepath.Rel(templatesDir, path)
+			relPath = filepath.ToSlash(relPath) // Ensure cross-platform compatibility
+			route := "/" + strings.TrimSuffix(relPath, filepath.Ext(relPath))
+
+			// Ensure that index.html is served at the root (/) path
 			if route == "/index" {
-				route = "/" // Set index.html to be served at the root
+				route = "/"
 			}
+
+			fmt.Println("✅ Registering route:", route, "->", path) // Debugging log
+
 			app.Get(route, func(c *fiber.Ctx) error {
-				return c.SendFile(path)
+				return c.SendFile(path) // Serve the page file
 			})
 		}
 		return nil
-	})
+	}); err != nil {
+		log.Fatalf("Error walking templates directory: %v", err)
+	}
 
 	log.Fatal(app.Listen(":8504"))
 }

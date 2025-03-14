@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/articles">Articles</a>
+        <a href="/projects">Projects</a>
+        <a href="/contact">Contact</a>
+        <a href="/about">About</a>
+    </nav>
+
+    <header>
+        <h1>Latest News</h1>
+    </header>
+
+    <main id="news-container" class="news-container">
+        <!-- Articles will be loaded here dynamically -->
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Your Site Name</p>
+    </footer>
+
+    <script>
+        async function loadArticles() {
+            const response = await fetch('/api/articles');
+            const articles = await response.json();
+            const container = document.getElementById('news-container');
+            container.innerHTML = '';
+
+            articles.forEach(article => {
+                const articleElement = document.createElement('article');
+                articleElement.className = 'news-item';
+                articleElement.innerHTML = `
+                    <a href="${article.link}">
+                        <h2>${article.title}</h2>
+                    </a>
+                    <p>Read more about ${article.title}.</p>
+                `;
+                container.appendChild(articleElement);
+            });
+        }
+
+        loadArticles();
+    </script>
+</body>
+</html>
