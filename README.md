@@ -8,6 +8,13 @@ go mod init portfolio
 go mod tidy
 ```
 
+## Formatting HTML files
+
+```bash
+# cd to the root of the project
+npx prettier --write "frontend/templates/**/*.html"  
+```
+
 ## Hosting Locally
 
 ```bash
