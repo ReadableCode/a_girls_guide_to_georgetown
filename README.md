@@ -1,4 +1,30 @@
-# a_girls_guide_to_georgetown
+# A Girl's Guide to Georgetown
+
+This repository contains the full codebase for a website designed to allow high school students in Georgetown, Texas, to manage the frontend independently while relying on a structured backend I built and maintain.
+
+## Backend
+
+- Built with **Go**, using **Fiber** for efficient, lightweight web serving.
+- Dynamically serves pages without requiring container rebuilds, utilizing **Docker volumes**.
+- Provides a structured API while handling page generation on demand.
+- Designed for **flexibility**, allowing the frontend to evolve without requiring backend changes.
+- Supports **customization** while ensuring stability and scalability.
+
+## Frontend
+
+- Managed entirely by the students, using **HTML, CSS, and JavaScript**.
+- The frontend code is included in this repository, but **it is not my work**.
+- The structure allows students to focus on frontend development and content updates without needing backend expertise.
+
+## Hosting and Deployment
+
+- Hosted on a **Linux (Ubuntu) server** running **Docker Compose**.
+- Backend is containerized, built from the Go source code, and deployed via Docker Compose.
+- Reverse-proxied through **SWAG (Secure Web Application Gateway)**.
+- **Cloudflare** manages domain routing, with **DuckDNS** handling dynamic DNS updates.
+- Uses **Docker volumes** to allow real-time updates to pages without restarting containers.
+
+This project is intended to support student-led web development while maintaining a solid backend foundation.
 
 ## Initializing the Project
 
