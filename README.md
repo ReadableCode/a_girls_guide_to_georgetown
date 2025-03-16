@@ -53,20 +53,25 @@ go run main.go
 
 ```bash
 docker build -t a-girls-guide-to-georgetown .
+# Windows
 docker run -it -p 8504:8504 -v "$PWD/frontend:/app/frontend" -v "$PWD/logs:/app/logs" a-girls-guide-to-georgetown
+# Linux
+docker run -it -p 8504:8504 -v "$(pwd)/frontend:/app/frontend" -v "$(pwd)/logs:/app/logs" a-girls-guide-to-georgetown
 ```
 
 ## Diagnosing inside the container
 
 ```bash
-docker run --rm -it a-girls-guide-to-georgetown sh
+# Windows
+docker run -it -p 8504:8504 -v "$PWD/frontend:/app/frontend" -v "$PWD/logs:/app/logs" a-girls-guide-to-georgetown sh
+# Linux
+docker run -it -p 8504:8504 -v "$(pwd)/frontend:/app/frontend" -v "$(pwd)/logs:/app/logs" a-girls-guide-to-georgetown sh
 ```
 
 ## Bashing into the running container
 
 ```bash
 sudo docker exec -it a-girls-guide-to-georgetown sh
-
 ```
 
 ## Documentation on reloads for page
