@@ -78,10 +78,12 @@ sudo docker exec -it a-girls-guide-to-georgetown sh
 
 [Docker Docs](../Docker/README.md)
 
-### Rebuilding after backend changes in repo
+### Rebuilding after changes in this repo
 
 ```bash
 sshelite
+cd /home/jason/GitHub/a_girls_guide_to_georgetown
+git pull
 cd /home/jason/GitHub/Docker
 sudo docker-compose -f docker_compose_projects.yaml build a_girls_guide_to_georgetown
 sudo docker-compose -f docker_compose_projects.yaml up -d
@@ -92,6 +94,7 @@ sudo docker-compose -f docker_compose_projects.yaml up -d
 ```bash
 sshelite
 cd /home/jason/GitHub/Docker
+git pull
 sudo systemctl stop docker_compose_projects.service
 sudo docker-compose -f docker_compose_projects.yaml down --remove-orphans
 sudo docker image prune -f
