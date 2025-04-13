@@ -20,8 +20,8 @@ COPY --from=build /app/backend/server /app/backend/server
 RUN mkdir -p /app/logs
 RUN mkdir -p /app/frontend
 
-# Declare volumes for frontend and logs
-VOLUME ["/app/frontend", "/app/logs"]
+# Copy Frontend files
+COPY frontend/ /app/frontend/
 
 # Set the working directory to the backend
 WORKDIR /app/backend
